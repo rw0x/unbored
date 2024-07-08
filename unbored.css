@@ -1,0 +1,37 @@
+body {
+    background-color: #f8f9fa; /* Light gray background */
+    font-family: Arial, sans-serif; /* Default font family */
+}
+
+/* Container styling */
+.container {
+    max-width: 800px; /* Limit container width */
+    margin: 0 auto; /* Center container horizontally */
+    padding: 20px; /* Add some padding inside the container */
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: #007bff; /* Blue background */
+    border-color: #007bff; /* Blue border */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3;
+}
+
+/* Offcanvas panel styling */
+.offcanvas-header {
+    background-color: #007bff; /* Blue header background */
+    color: white; /* White text */
+}
+
+.offcanvas-body {
+    padding: 10px; /* Add padding inside the offcanvas body */
+}
+
+/* List item styling */
+.list-group-item {
+    cursor: pointer; /* Change cursor to pointer on list items */
+}
