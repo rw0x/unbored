@@ -28,6 +28,7 @@ body {
 }
 
 .offcanvas-body {
+    display: flex;
     padding: 10px; /* Add padding inside the offcanvas body */
 }
 

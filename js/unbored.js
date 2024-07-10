@@ -12,14 +12,60 @@ function unbored()
                 
             </div>
             <div class="offcanvas-body text-break" id="offcanvasBody">
-            
             </div>
             <div>
         </div>
     `;
-    setupQueueBuffer();
+    //setupQueueBuffer();
+    handleActivityEndReached(5, 3);
     setupBoundlessScrolling();
 }
+
+const unboredBody = document.getElementById('offcanvasBody');
+
+//enables responding to when the user has reached the end of the scroll view. There needs to be currently-existing
+//scroll view for this to work.
+function setupBoundlessScrolling()
+{
+    const element = document.getElementById('offcanvasBody');
+    let lastScrollTop = 0;
+    element.onscroll = (e) =>
+    {
+        lastScrollTop = element.scrollTop <= 0 ? 0 : element.scrollTop;
+        if (element.scrollTop + element.offsetHeight >= element.scrollHeight)
+        {
+            handleActivityEndReached(5, 5);
+            console.log("User reached the end of the scroll view!");
+        }
+    }
+}
+
+//Adds more entries to the buffer. This should run when the user reached the bottom of the page.
+function handleActivityEndReached(memeAmount, articleAmount)
+{
+    //todo: we can setup boundless scrolling here by changing the buffer. we should setup a data sctructure
+    //to allow our buffer to update through an interface, which should load content onto the webpage.
+    fetchRandomJSON(`https://meme-api.com/gimme/${memeAmount}`).then((response) => {
+        for(const meme of response.memes)
+        {
+            console.log(meme.url) //the png image of the meme as a url link
+            addImageToBuffer(meme.url);
+        }
+
+    });
+    fetchRandomJSON(`https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=random&rnnamespace=0&rnlimit=${articleAmount}`)
+        .then((response) => {
+            for(const article of response.query.random)
+                {
+                    console.log(`https://en.wikipedia.org/?curid=${article.id}`);
+                    addArticleToBuffer(article.id, article.id);
+                    
+                }
+        });
+
+    
+}
+
 
 function setupQueueBuffer()
 {
@@ -53,37 +99,36 @@ function handleActivityClick(activity)
     if (activity.includes('Project'))
     {
         offcanvasBody.innerHTML = `<div class="alert alert-info">Starting ${activity}...</div>`;
+        // fixme: this doesn't reset the menu when we close/reopen the offcanvas
         // Implement logic for project
     } else if (activity.includes('API Project'))
     {
         offcanvasBody.innerHTML = `<div class="alert alert-info">Fetching data for ${activity}...</div>`;
+        // fixme: this doesn't reset the menu when we close/reopen the offcanvas
         // Implement API fetch logic
     }
 }
-function handleActivityEndReached()
-{
-    //todo: we can setup boundless scrolling here by changing the buffer. we should setup a data sctructure
-    //to allow our buffer to update through an interface, which should load content onto the webpage.
-    fetchRandomJSON("https://meme-api.com/gimme/16").then((response) => console.log(response.preview[2]));
-    fetchRandomJSON("https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=random&rnnamespace=0&rnlimit=4")
-        .then((response) => console.log(`https://en.wikipedia.org/?curid=${response.query.random[0].id}`));
 
+function addImageToBuffer(imageLink)
+{
+    let div = document.createElement("div");
+    let img = document.createElement("img");
+    img.setAttribute("src", imageLink);
+    img.setAttribute("class", "img-fluid");
+    div.appendChild(img);
+    offcanvasBody.appendChild(div);
 }
 
-function setupBoundlessScrolling()
+function addArticleToBuffer(articleTitle, articleText)
 {
-    const element = document.getElementById('element');
-    let lastScrollTop = 0;
-    element.onscroll = (e) =>
-    {
+    let div = document.createElement("div");
+    let p = document.createElement("p");
+    p.textContent = `${articleTitle} \n ${articleText}`;
 
-        lastScrollTop = element.scrollTop <= 0 ? 0 : element.scrollTop;
-        if (element.scrollTop + element.offsetHeight >= element.scrollHeight)
-        {
-            handleActivityEndReached();
-        }
-    }
+    div.appendChild(p);
+    offcanvasBody.appendChild(div);
 }
+
 
 //Returns a Promise with JSON data. The JSON data can be accessed via callback ".then((JSON) => { doWorkOnJSON? })"
 //url: a URL string that will be used to fetch JSON data.
