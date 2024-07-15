@@ -58,7 +58,7 @@ function handleActivityEndReached(memeAmount, articleAmount)
             for(const article of response.query.random)
                 {
                     console.log(`https://en.wikipedia.org/?curid=${article.id}`);
-                    addArticleToBuffer(article.id, article.id);
+                    addArticleToBuffer(article.title, `https://en.wikipedia.org/?curid=${article.id}`);
                     
                 }
         });
@@ -80,6 +80,7 @@ function displayActivities(buffer)
 {
     const offcanvasBody = document.getElementById('offcanvasBody');
     offcanvasBody.innerHTML = '';
+
 
     buffer.forEach(activity =>
     {
@@ -119,11 +120,12 @@ function addImageToBuffer(imageLink)
     offcanvasBody.appendChild(div);
 }
 
-function addArticleToBuffer(articleTitle, articleText)
+function addArticleToBuffer(articleTitle, articleLink)
 {
     let div = document.createElement("div");
-    let p = document.createElement("p");
-    p.textContent = `${articleTitle} \n ${articleText}`;
+    let p = document.createElement("a");
+    p.textContent = `What is: ${articleTitle}`;
+    p.setAttribute("href", articleLink)
 
     div.appendChild(p);
     offcanvasBody.appendChild(div);
